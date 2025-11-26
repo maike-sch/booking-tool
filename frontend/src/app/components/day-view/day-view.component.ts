@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RaumDTO, RaumService } from '../../services/raum.service';
 import { BuchungsService } from '../../services/buchungs.service';
@@ -9,10 +10,11 @@ interface Slot { label: string; iso: string }
 @Component({
   selector: 'app-day-view',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   template: `
     <div class="container">
       <h2>Tagesansicht</h2>
+      <p><a routerLink="/my-bookings">Meine Buchungen ansehen</a></p>
       <div class="filters">
         <label>Datum</label>
         <input type="date" [value]="date" (change)="onDateChange($event)" />

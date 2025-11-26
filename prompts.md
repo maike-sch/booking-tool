@@ -67,3 +67,12 @@ Resolution approach: Ensure the Spring Security context holds a `UserDetails` pr
 2) Consolidate all prompts from this project into a single `prompts.md` file.
 
 Resolution approach: This file is that consolidation.
+
+3) Add logging for errors in frontend and backend for more transparency.
+
+Resolution approach:
+- Backend: Added structured logging
+  - JwtAuthFilter logs JWT validation failures at WARN.
+  - GlobalExceptionHandler logs conflicts/validation/auth failures at WARN and unexpected errors at ERROR with stack trace.
+  - application.properties sets logging levels for the project and Spring Security to INFO.
+- Frontend: Introduced a global HTTP error logging interceptor that logs method, URL, status and message to console.error while preserving component-level error handling.
