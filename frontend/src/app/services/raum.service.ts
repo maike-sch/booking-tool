@@ -17,7 +17,7 @@ export interface RaumCreateUpdateDTO {
 
 @Injectable({ providedIn: 'root' })
 export class RaumService {
-  private readonly API = 'http://localhost:8080/raeume';
+  private readonly API = 'http://localhost:8089/raeume';
 
   constructor(private http: HttpClient) {}
 
