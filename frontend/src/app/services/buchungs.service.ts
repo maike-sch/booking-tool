@@ -20,6 +20,7 @@ export interface BuchungCreateDTO {
 
 @Injectable({ providedIn: 'root' })
 export class BuchungsService {
+  // Align with backend server.port=8089
   private readonly API = 'http://localhost:8089/buchungen';
 
   constructor(private http: HttpClient) {}
