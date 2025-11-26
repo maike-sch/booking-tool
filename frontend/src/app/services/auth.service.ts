@@ -6,7 +6,7 @@ interface AuthResponse { token: string }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly API = 'http://localhost:8080';
+  private readonly API = 'http://localhost:8089';
   private readonly TOKEN_KEY = 'jwt_token';
 
   private _role$ = new BehaviorSubject<string | null>(this.getRole());
