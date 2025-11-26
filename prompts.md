@@ -76,3 +76,23 @@ Resolution approach:
   - GlobalExceptionHandler logs conflicts/validation/auth failures at WARN and unexpected errors at ERROR with stack trace.
   - application.properties sets logging levels for the project and Spring Security to INFO.
 - Frontend: Introduced a global HTTP error logging interceptor that logs method, URL, status and message to console.error while preserving component-level error handling.
+
+---
+
+#### Recent Updates (Nov 2025)
+
+- Booking Overview (My Bookings)
+  - Added a standalone component MyBookingsComponent that shows the authenticated user’s bookings (room name, start, end).
+  - New protected route: /my-bookings guarded by AuthGuard.
+  - Uses BuchungsService.myBookings() which calls GET /buchungen/user.
+
+- Day View Styling with Angular Material
+  - DayViewComponent template refactored to use Material components: mat-card, mat-form-field, mat-select, mat-list, and Material buttons.
+  - Added a “Meine Buchungen” Material button linking to /my-bookings.
+  - Animations enabled globally via provideAnimations() in app.config.ts.
+  - Material prebuilt theme already applied: @angular/material/prebuilt-themes/azure-blue.css.
+
+- How to use
+  1. Log in.
+  2. Navigate to “Tagesansicht” to view and create bookings with the Material-styled UI.
+  3. Click “Meine Buchungen” or open /my-bookings to see your personal bookings.
