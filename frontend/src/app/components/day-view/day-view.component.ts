@@ -4,56 +4,118 @@ import { RouterModule } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RaumDTO, RaumService } from '../../services/raum.service';
 import { BuchungsService } from '../../services/buchungs.service';
+// Angular Material
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { MatDividerModule } from '@angular/material/divider';
 
 interface Slot { label: string; iso: string }
 
 @Component({
   selector: 'app-day-view',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
+    // Material
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
+    MatListModule,
+    MatDividerModule
+  ],
   template: `
     <div class="container">
-      <h2>Tagesansicht</h2>
-      <p><a routerLink="/my-bookings">Meine Buchungen ansehen</a></p>
-      <div class="filters">
-        <label>Datum</label>
-        <input type="date" [value]="date" (change)="onDateChange($event)" />
-        <button (click)="loadVerfuegbareRaeume()">Verfügbare Räume laden</button>
+      <h2 class="page-title">Tagesansicht</h2>
+      <div class="actions">
+        <a mat-raised-button color="primary" routerLink="/my-bookings">Meine Buchungen</a>
       </div>
 
-      <div class="rooms">
-        <h3>Räume</h3>
-        <ul>
-          <li *ngFor="let r of rooms">{{r.name}} ({{r.anzahlPlaetze}}) - {{r.ausstattung}}</li>
-        </ul>
-      </div>
+      <mat-card class="card">
+        <mat-card-title>Filter</mat-card-title>
+        <mat-card-content>
+          <div class="row">
+            <mat-form-field appearance="outline">
+              <mat-label>Datum</mat-label>
+              <input matInput type="date" [value]="date" (change)="onDateChange($event)" />
+            </mat-form-field>
+            <button mat-raised-button color="accent" (click)="loadVerfuegbareRaeume()">Verfügbare Räume laden</button>
+          </div>
+        </mat-card-content>
+      </mat-card>
 
-      <div class="booking">
-        <h3>Buchung anlegen</h3>
-        <form [formGroup]="form" (ngSubmit)="submit()">
-          <label>Raum</label>
-          <select formControlName="raumId">
-            <option *ngFor="let r of rooms" [value]="r.id">{{ r.name }}</option>
-          </select>
-          <label>Start</label>
-          <select formControlName="startZeit">
-            <option *ngFor="let s of slots" [value]="s.iso">{{ s.label }}</option>
-          </select>
-          <label>Ende</label>
-          <select formControlName="endZeit">
-            <option *ngFor="let s of slots" [value]="s.iso">{{ s.label }}</option>
-          </select>
-          <button type="submit" [disabled]="form.invalid || loading">Buchen</button>
-          <div class="error" *ngIf="error">{{ error }}</div>
-          <div class="ok" *ngIf="success">Buchung erstellt</div>
-        </form>
+      <div class="grid">
+        <mat-card class="card">
+          <mat-card-title>Räume</mat-card-title>
+          <mat-card-content>
+            <mat-list *ngIf="rooms.length > 0; else emptyRooms">
+              <mat-list-item *ngFor="let r of rooms">
+                <div matListItemTitle>{{ r.name }}</div>
+                <div matListItemLine>Plätze: {{ r.anzahlPlaetze }}</div>
+                <div matListItemLine>Ausstattung: {{ r.ausstattung }}</div>
+              </mat-list-item>
+            </mat-list>
+            <ng-template #emptyRooms>
+              <div class="muted">Keine Räume geladen.</div>
+            </ng-template>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card class="card">
+          <mat-card-title>Buchung anlegen</mat-card-title>
+          <mat-card-content>
+            <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Raum</mat-label>
+                <mat-select formControlName="raumId" required>
+                  <mat-option *ngFor="let r of rooms" [value]="r.id">{{ r.name }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Start</mat-label>
+                <mat-select formControlName="startZeit" required>
+                  <mat-option *ngFor="let s of slots" [value]="s.iso">{{ s.label }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Ende</mat-label>
+                <mat-select formControlName="endZeit" required>
+                  <mat-option *ngFor="let s of slots" [value]="s.iso">{{ s.label }}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <div class="full">
+                <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || loading">Buchen</button>
+              </div>
+
+              <div class="error" *ngIf="error">{{ error }}</div>
+              <div class="ok" *ngIf="success">Buchung erstellt</div>
+            </form>
+          </mat-card-content>
+        </mat-card>
       </div>
     </div>
   `,
   styles: [`
-    .container{max-width:900px;margin:2rem auto;padding:1rem}
-    .filters,.booking{margin:1rem 0;display:flex;gap:.5rem;align-items:center}
-    .rooms ul{padding-left:1rem}
+    .container{max-width:1000px;margin:2rem auto;padding:1rem}
+    .page-title{margin:0 0 1rem}
+    .actions{display:flex;justify-content:flex-end;margin-bottom:1rem}
+    .card{margin-bottom:1rem}
+    .row{display:flex;gap:1rem;align-items:center}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+    @media (max-width: 900px){.grid{grid-template-columns:1fr}}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .form-grid .full{grid-column:1 / -1}
+    .muted{color:#666}
     .error{color:#b00020;margin-top:.5rem}
     .ok{color:#0a7a0a;margin-top:.5rem}
   `]
