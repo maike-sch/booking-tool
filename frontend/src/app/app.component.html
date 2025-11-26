@@ -1,8 +1,22 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<nav class="topnav">
+  <a routerLink="/login">Login</a>
+  <a routerLink="/day" *ngIf="auth.isLoggedIn()">Tagesansicht</a>
+  <a routerLink="/admin/rooms" *ngIf="auth.isLoggedIn() && auth.hasRole('ROLE_ADMIN')">Räume</a>
+  <span class="spacer"></span>
+  <button *ngIf="auth.isLoggedIn()" (click)="auth.logout()">Logout</button>
+</nav>
+
+<main class="content">
+  <router-outlet></router-outlet>
+</main>
+
+<style>
+  .topnav{display:flex;gap:1rem;padding:.5rem 1rem;border-bottom:1px solid #eee;align-items:center}
+  .spacer{flex:1}
+  a{ text-decoration:none }
+  button{ padding:.25rem .75rem }
+  .content{padding:1rem}
+</style>
 <!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
 <!-- * * * * * * * to get started with your project! * * * * * * * -->
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
